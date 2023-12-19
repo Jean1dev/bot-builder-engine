@@ -1,8 +1,11 @@
 package data
 
 import (
+	"bot_builder_engine/repository"
 	"bot_builder_engine/services"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/url"
 )
@@ -18,18 +21,10 @@ type Engine struct {
 	Error    error
 }
 
-type Runner struct {
-	Engines []Engine
-}
-
-var (
-	runner = &Runner{Engines: make([]Engine, 0)}
-)
-
-func AddRunner(nodes []Node, edges []Edge, key string) *Runner {
-	exists := runner.VerifyIfKeyRegistered(key)
+func AddRunner(nodes []Node, edges []Edge, key string) {
+	exists := VerifyIfKeyRegistered(key)
 	if exists {
-		return runner
+		return
 	}
 
 	engine := &Engine{
@@ -41,52 +36,52 @@ func AddRunner(nodes []Node, edges []Edge, key string) *Runner {
 		Key:      key,
 	}
 
-	runner.Engines = append(runner.Engines, *engine)
-	return runner
-}
-
-func Run(key string, id string) {
-	runner.RunNextStep(key, id)
+	repository.SaveState(engine, fmt.Sprintf("%s.json", key))
 }
 
 func (e *Engine) registerSucess() {
 	e.Step++
 	e.NextStep++
+	repository.SaveState(e, fmt.Sprintf("%s.json", e.Key))
 }
 
 func (e *Engine) registerFail(err error) {
 	e.Error = err
+	e.Finished = true
+	repository.SaveState(e, fmt.Sprintf("%s.json", e.Key))
 }
 
-func (r *Runner) VerifyIfKeyRegistered(key string) bool {
-	for _, engine := range r.Engines {
-		if engine.Key == key {
-			return true
-		}
+func VerifyIfKeyRegistered(key string) bool {
+	return repository.VerifyIfFileExists(fmt.Sprintf("%s.json", key))
+}
+
+func GetEngine(key string) (*Engine, error) {
+	byteValue, err := repository.Retrive(fmt.Sprintf("%s.json", key))
+
+	if err != nil {
+		log.Print(err)
+		return nil, errors.New("Engine not found for suplied key")
 	}
 
-	return false
-}
+	var data Engine
+	err = json.Unmarshal(byteValue, &data)
 
-func (r *Runner) GetEngine(key string) (*Engine, error) {
-	for _, engine := range r.Engines {
-		if engine.Key == key {
-			return &engine, nil
-		}
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, errors.New("Engine not found for suplied key")
+	return &data, nil
 }
 
-func (r *Runner) RunNextStep(key string, id string) {
-	engine, err := runner.GetEngine(key)
+func RunNextStep(key string, id string) {
+	engine, err := GetEngine(key)
 	if err != nil {
 		log.Print(err)
 		return
 	}
 
 	if engine.Step >= len(engine.Nodes) {
-		engine.Finished = true
+		engine.registerFail(errors.New("Engine already finished"))
 		return
 	}
 
