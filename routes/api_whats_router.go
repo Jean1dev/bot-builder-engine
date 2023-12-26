@@ -79,7 +79,7 @@ func hook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Print(input)
-	go data.RunNextStep(input.Key, input.Body.Identifier.RemodeJid)
+	go application.RunNextStep(input.Key, input.Body.Identifier.RemodeJid)
 }
 
 func engine(w http.ResponseWriter, r *http.Request) {

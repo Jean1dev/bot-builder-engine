@@ -1,7 +1,9 @@
 package data
 
 var (
-	ENVIAR_MESSAGE = "ENVIAR_MENSAGEM"
+	ENVIAR_MESSAGE        = "ENVIAR_MENSAGEM"
+	ENVIAR_MESSAGE_IMAGEM = "ENVIAR_IMAGEM"
+	ENVIAR_MESSAGE_BUTTON = ""
 )
 
 type Position struct {
@@ -16,7 +18,9 @@ type Data struct {
 }
 
 type DataAction struct {
-	Message string `json:"message"`
+	Message    string `json:"message"`
+	ImageTitle string `json:"imageTitle"`
+	ImageUrl   string `json:"imageUrl"`
 }
 
 type Action struct {

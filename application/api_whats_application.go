@@ -34,5 +34,5 @@ func EngineRun(nodes []data.Node, edges []data.Edge, key string) {
 		return
 	}
 
-	data.AddRunner(nodes, edges, key)
+	AddRunner(nodes, edges, key)
 }
