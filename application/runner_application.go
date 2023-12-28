@@ -83,7 +83,62 @@ func RunNextStep(key string, requestPhoneNumber string) {
 }
 
 func enviarMessageWithButton(engine *data.EngineExecution, node *data.Node, requestPhoneNumber string) {
+	if len(node.Data.Action.Data.ActionsButtons) == 0 {
+		log.Print("ActionsButtons with 0 length")
+		engine.RegisterFail(errors.New("No ActionsButtons asigned"))
+		return
+	}
 
+	buttonDataInput := services.BtnDataInput{
+		Text:    "Titulo provisorio",
+		Footer:  "Rodape provisorio",
+		Buttons: make([]services.ButtonsTemplate, 0),
+	}
+
+	payloadInput := &services.InputTemplateButtonMessage{
+		Data:   buttonDataInput,
+		Number: requestPhoneNumber,
+	}
+
+	for _, action := range node.Data.Action.Data.ActionsButtons {
+		if action.Type == data.BUTTON_TYPE_REPLY {
+			template := &services.ButtonsTemplate{
+				Type:    data.BUTTON_TYPE_REPLY,
+				Title:   action.TitleMessage,
+				Payload: action.Response,
+			}
+
+			payloadInput.Data.Buttons = append(payloadInput.Data.Buttons, *template)
+		}
+
+		if action.Type == data.BUTTON_TYPE_URL {
+			template := &services.ButtonsTemplate{
+				Type:    data.BUTTON_TYPE_URL,
+				Title:   action.TitleMessage,
+				Payload: action.Response,
+			}
+
+			payloadInput.Data.Buttons = append(payloadInput.Data.Buttons, *template)
+		}
+
+		if action.Type == data.BUTTON_TYPE_CALL {
+			template := &services.ButtonsTemplate{
+				Type:    data.BUTTON_TYPE_CALL,
+				Title:   action.TitleMessage,
+				Payload: action.Response,
+			}
+
+			payloadInput.Data.Buttons = append(payloadInput.Data.Buttons, *template)
+		}
+	}
+
+	if err := services.PostButtonTemplate(*payloadInput, engine.Owner); err != nil {
+		log.Print(err)
+		engine.RegisterFail(err)
+		return
+	}
+
+	engine.RegisterSucess()
 }
 
 func enviarMessageWithImage(engine *data.EngineExecution, node *data.Node, requestPhoneNumber string) {
