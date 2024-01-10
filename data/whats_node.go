@@ -1,7 +1,13 @@
 package data
 
 var (
-	ENVIAR_MESSAGE = "ENVIAR_MENSAGEM"
+	ENVIAR_MESSAGE        = "ENVIAR_MENSAGEM"
+	ENVIAR_MESSAGE_IMAGEM = "ENVIAR_IMAGEM"
+	ENVIAR_MESSAGE_BUTTON = "ENVIAR_MESSAGE_BUTTON"
+
+	BUTTON_TYPE_REPLY = "replyButton"
+	BUTTON_TYPE_URL   = "urlButton"
+	BUTTON_TYPE_CALL  = "callButton"
 )
 
 type Position struct {
@@ -15,8 +21,17 @@ type Data struct {
 	Action Action `json:"action"`
 }
 
+type ActionButton struct {
+	TitleMessage string `json:"titleMessage"`
+	Type         string `json:"type"`
+	Response     string `json:"response"`
+}
+
 type DataAction struct {
-	Message string `json:"message"`
+	Message        string         `json:"message"`
+	ImageTitle     string         `json:"imageTitle"`
+	ImageUrl       string         `json:"imageUrl"`
+	ActionsButtons []ActionButton `json:"actionsButton"`
 }
 
 type Action struct {
