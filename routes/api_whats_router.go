@@ -12,6 +12,10 @@ import (
 	"time"
 )
 
+type GenerateCodeInput struct {
+	Code string `json:"code"`
+}
+
 type EngineRegister struct {
 	Node []data.Node `json:"nodes"`
 	Edge []data.Edge `json:"edges"`
@@ -93,7 +97,15 @@ func engine(w http.ResponseWriter, r *http.Request) {
 }
 
 func generateCode(w http.ResponseWriter, r *http.Request) {
-	key := generateRandomString(6)
+	var input GenerateCodeInput
+	var key string
+	err := json.NewDecoder(r.Body).Decode(&input)
+
+	if err != nil {
+		key = generateRandomString(6)
+	} else {
+		key = input.Code
+	}
 
 	html, err := application.GenerateQRCode(key)
 
