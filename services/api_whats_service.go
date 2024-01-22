@@ -188,7 +188,7 @@ func MakeApiCall(endpoint string, method string) ([]byte, error) {
 	defer res.Body.Close()
 
 	log.Println("Status da resposta:", res.Status)
-	if res.StatusCode != 201 {
+	if res.StatusCode != 201 && res.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("Status code %s", res.Status))
 	}
 
