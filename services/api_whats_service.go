@@ -15,8 +15,20 @@ import (
 )
 
 var (
-	token   = "Bearer 3n3HD2qWmeb6!hX5eQ01"
-	baseURL = "https://whatsapp-api-da7eccbe4a89.herokuapp.com/"
+	token = func() string {
+		value := os.Getenv("TOKEN")
+		if value == "" {
+			return "Bearer RANDOM_STRING_HERE"
+		}
+		return value
+	}()
+	baseURL = func() string {
+		value := os.Getenv("BASE_URL")
+		if value == "" {
+			return "http://localhost:3333/"
+		}
+		return value
+	}()
 )
 
 type ButtonsTemplate struct {
