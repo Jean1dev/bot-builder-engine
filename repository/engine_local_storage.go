@@ -2,7 +2,7 @@ package repository
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 )
@@ -34,7 +34,7 @@ func Retrive(fileName string) ([]byte, error) {
 
 	defer file.Close()
 
-	byteValue, err := ioutil.ReadAll(file)
+	byteValue, err := io.ReadAll(file)
 
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func Retrive(fileName string) ([]byte, error) {
 }
 
 func VerifyIfFileExists(fileName string) bool {
-	files, err := ioutil.ReadDir(".")
+	files, err := os.ReadDir(".")
 	if err != nil {
 		return false
 	}
