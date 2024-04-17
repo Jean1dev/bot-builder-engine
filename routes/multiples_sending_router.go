@@ -4,7 +4,6 @@ import (
 	"bot_builder_engine/application"
 	"bot_builder_engine/infra/config"
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -23,7 +22,20 @@ func BatchSend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	application.OrchestreSending(inputBody.Engine.Node, inputBody.Engine.Edge, inputBody.To, inputBody.KeyWhatsApp)
+	ref := application.OrchestreSending(inputBody.Engine.Node, inputBody.Engine.Edge, inputBody.To, inputBody.KeyWhatsApp)
 
-	log.Print(inputBody)
+	w.Write([]byte(ref))
+}
+
+func BatchRetrive(w http.ResponseWriter, r *http.Request) {
+	config.AllowAllOrigins(w, r)
+	id := r.URL.Query().Get("id")
+
+	content, err := application.Retrive(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Write([]byte(content))
 }

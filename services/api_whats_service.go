@@ -94,8 +94,8 @@ type InputTemplateButtonMessage struct {
 	Data   BtnDataInput `json:"btndata"`
 }
 
-func GetAuditMessages(key string) (*AuditMessagesOuput, error) {
-	apiURL := fmt.Sprintf("%saudit/find?key=%s", baseURL, key)
+func GetAuditMessages(id string) (*AuditMessagesOuput, error) {
+	apiURL := fmt.Sprintf("%saudit/find?id=%s", baseURL, id)
 
 	req, err := http.NewRequest("GET", apiURL, nil)
 
@@ -244,7 +244,6 @@ func sendSimpleTextMessage(key string, formData string) (*http.Response, error) 
 		return nil, err
 	}
 
-	defer resp.Body.Close()
 	return resp, nil
 }
 
@@ -253,6 +252,7 @@ func PostMessageAndReturn(key string, formData string) (*TextMessageOutput, erro
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -278,6 +278,7 @@ func PostMessage(key string, formData string) error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != 201 {
 		return errors.New(fmt.Sprintf("Status code %s", resp.Status))

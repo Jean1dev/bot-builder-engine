@@ -31,4 +31,5 @@ func setupAPI() {
 	http.HandleFunc("/poc/whats/engine-run", routes.ApiWhatsRouterHandler)
 	http.HandleFunc("/poc/whats/engine-hook", routes.ApiWhatsRouterHandler)
 	http.HandleFunc("/poc/whats/batch-send", routes.BatchSend)
+	http.HandleFunc("/poc/whats/batch-retrieve", routes.BatchRetrive)
 }
