@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "67f8fcbe-2afb-4386-a9f5-bcc6aed107d2",
+		"name": "Bot Builder Engine",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7048327"
+	},
+	"item": [
+		{
+			"name": "Generate QR Code",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/poc/whats/generate-code",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"poc",
+						"whats",
+						"generate-code"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Batch Sending",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"to\": [\n        \"554898457797\",\n        \"554899147211\",\n        \"554898685622\"\n    ],\n    \"key\": \"PAI_CELULAR\",\n    \"external_id\": \"external_id\",\n    \"engine\": {\n        \"key\": \"PAI_CELULAR\",\n        \"edges\": [],\n        \"nodes\": [\n            {\n                \"id\": \"node-0\",\n                \"type\": \"start\",\n                \"position\": {\n                    \"x\": 0,\n                    \"y\": 0\n                },\n                \"data\": {\n                    \"label\": \"github-desktop-linux\",\n                    \"phone\": \"48998457797\",\n                    \"action\": {\n                        \"type\": \"ENVIAR_MESSAGE_BUTTON\",\n                        \"data\": {\n                            \"actionsButton\": [\n                                {\n                                    \"type\": \"replyButton\",\n                                    \"response\": \"opt 1\"\n                                },\n                                {\n                                    \"type\": \"urlButton\",\n                                    \"response\": \"https://transform.tools/json-to-go\"\n                                }\n                            ],\n                            \"titleMessage\": \"envio de lote\",\n                            \"footerMessage\": \"rodape\"\n                        }\n                    }\n                },\n                \"width\": 210,\n                \"height\": 72\n            }\n        ]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/poc/whats/batch-send",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"poc",
+						"whats",
+						"batch-send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Batch Sending Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"to\": [\n        \"554898457797\",\n        \"554899147211\",\n        \"554898685622\"\n    ],\n    \"key\": \"PAI_CELULAR\",\n    \"external_id\": \"external_id\",\n    \"engine\": {\n        \"key\": \"PAI_CELULAR\",\n        \"edges\": [],\n        \"nodes\": [\n            {\n                \"id\": \"node-0\",\n                \"type\": \"start\",\n                \"position\": {\n                    \"x\": 0,\n                    \"y\": 0\n                },\n                \"data\": {\n                    \"label\": \"teste\",\n                    \"phone\": \"48998457797\",\n                    \"action\": {\n                        \"type\": \"ENVIAR_MENSAGEM\",\n                        \"data\": {\n                            \"message\": \"envio de mensagem automatica em batch, nao responder\"\n                        }\n                    }\n                },\n                \"width\": 164,\n                \"height\": 72\n            }\n        ]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/poc/whats/batch-send",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"poc",
+						"whats",
+						"batch-send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Batch Retrieve",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/poc/whats/batch-retrieve?id=PAI_CELULAR_.json",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"poc",
+						"whats",
+						"batch-retrieve"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "PAI_CELULAR_.json"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
