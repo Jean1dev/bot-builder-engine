@@ -3,9 +3,9 @@ package utils
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -22,7 +22,7 @@ func DownloadImageFromUrl(url string) (string, error) {
 	defer resp.Body.Close()
 
 	filename := fmt.Sprintf("file-%s", time.Microsecond.String())
-	file, err := ioutil.TempFile("", filename)
+	file, err := os.CreateTemp("", filename)
 
 	if err != nil {
 		return "", err

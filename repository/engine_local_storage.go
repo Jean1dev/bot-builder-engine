@@ -2,10 +2,36 @@ package repository
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 )
+
+// RACE CONDITION AQUI
+func ApendState(data interface{}, fileName string) error {
+	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	_, err = file.Write(jsonData)
+	if err != nil {
+		return err
+	}
+
+	_, err = file.Write([]byte("\n"))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func SaveState(data interface{}, fileName string) error {
 	file, err := os.Create(fileName)
@@ -34,7 +60,7 @@ func Retrive(fileName string) ([]byte, error) {
 
 	defer file.Close()
 
-	byteValue, err := ioutil.ReadAll(file)
+	byteValue, err := io.ReadAll(file)
 
 	if err != nil {
 		return nil, err
@@ -44,7 +70,7 @@ func Retrive(fileName string) ([]byte, error) {
 }
 
 func VerifyIfFileExists(fileName string) bool {
-	files, err := ioutil.ReadDir(".")
+	files, err := os.ReadDir(".")
 	if err != nil {
 		return false
 	}

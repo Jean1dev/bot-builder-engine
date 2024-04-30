@@ -1,6 +1,6 @@
 
 infra/__debug_bin
-*.json
+infra/*.json
 .env
 .env.prod
 !.env.example
