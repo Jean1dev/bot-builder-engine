@@ -28,6 +28,36 @@
 			"response": []
 		},
 		{
+			"name": "Verify Number",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/poc/whats/verify-number",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"poc",
+						"whats",
+						"verify-number"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Batch Sending",
 			"request": {
 				"method": "POST",
