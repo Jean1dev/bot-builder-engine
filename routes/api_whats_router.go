@@ -41,6 +41,11 @@ type Hook struct {
 	Body BodyHook `json:"body"`
 }
 
+type VerifyNumberInput struct {
+	Number string `json:"number"`
+	Code   string `json:"code"`
+}
+
 func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
 	config.AllowAllOrigins(w, r)
 	method := r.Method
@@ -53,6 +58,11 @@ func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
 
 		if strings.HasPrefix(r.URL.Path, "/poc/whats/engine-hook") {
 			hook(w, r)
+			return
+		}
+
+		if strings.HasPrefix(r.URL.Path, "/poc/whats/verify-number") {
+			verifyNumber(w, r)
 			return
 		}
 
@@ -73,6 +83,23 @@ func generateRandomString(length int) string {
 	}
 
 	return string(result)
+}
+
+func verifyNumber(w http.ResponseWriter, r *http.Request) {
+	var input VerifyNumberInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	connected, err := application.VerifyNumber(input.Code)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]bool{"connected": connected})
 }
 
 func hook(w http.ResponseWriter, r *http.Request) {

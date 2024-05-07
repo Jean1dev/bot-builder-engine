@@ -36,3 +36,20 @@ func EngineRun(nodes []data.Node, edges []data.Edge, key string) {
 
 	AddRunner(nodes, edges, key)
 }
+
+func VerifyNumber(key string) (bool, error) {
+	output, err := services.VerifyNumberOnWhatsApi(key)
+	if err != nil {
+		return false, err
+	}
+
+	if output.Error {
+		return false, nil
+	}
+
+	if output.InstanceData.PhoneConnected {
+		return true, nil
+	}
+
+	return false, nil
+}

@@ -77,6 +77,21 @@ type AuditMessagesOuput struct {
 	} `json:"data"`
 }
 
+type VerifyNumberOutput struct {
+	Error        bool   `json:"error"`
+	Message      string `json:"message"`
+	InstanceData struct {
+		InstanceKey    string `json:"instance_key"`
+		PhoneConnected bool   `json:"phone_connected"`
+		WebhookURL     string `json:"webhookUrl"`
+		User           struct {
+			ID   string `json:"id"`
+			Name string `json:"name"`
+			Lid  string `json:"lid"`
+		} `json:"user"`
+	} `json:"instance_data"`
+}
+
 type ButtonsTemplate struct {
 	Type    string `json:"type"`
 	Title   string `json:"title"`
@@ -92,6 +107,38 @@ type BtnDataInput struct {
 type InputTemplateButtonMessage struct {
 	Number string       `json:"id"`
 	Data   BtnDataInput `json:"btndata"`
+}
+
+func VerifyNumberOnWhatsApi(key string) (*VerifyNumberOutput, error) {
+	apiURL := fmt.Sprintf("%sinstance/info?key=%s", baseURL, key)
+
+	req, err := http.NewRequest("GET", apiURL, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", token)
+
+	client := &http.Client{Timeout: time.Second * 5}
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var verifyNumber VerifyNumberOutput
+	err = json.Unmarshal(body, &verifyNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	return &verifyNumber, nil
 }
 
 func GetAuditMessages(id string) (*AuditMessagesOuput, error) {
