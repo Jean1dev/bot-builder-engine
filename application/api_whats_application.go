@@ -3,12 +3,15 @@ package application
 import (
 	"bot_builder_engine/data"
 	"bot_builder_engine/services"
+	"errors"
 	"fmt"
 	"log"
+	"net/url"
 	"time"
 )
 
 func GenerateQRCode(key string) (string, error) {
+	// TODO :: RANDOM_STRING_HERE ???
 	body, err := services.MakeApiCall(fmt.Sprintf("instance/init?webhook=true&key=%s&token=RANDOM_STRING_HERE", key), "GET")
 	if err != nil {
 		return "", err
@@ -52,4 +55,22 @@ func VerifyNumber(key string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func PlayGroundSend(key string, message string, recipient string) (bool, error) {
+	formData := url.Values{}
+	formData.Set("message", message)
+	formData.Set("id", recipient)
+
+	output, err := services.PostMessageAndReturn(key, formData.Encode())
+	if err != nil {
+		return false, err
+	}
+
+	if output.Error {
+		log.Printf("api whats call error")
+		return false, errors.New("error sending message")
+	}
+
+	return true, nil
 }

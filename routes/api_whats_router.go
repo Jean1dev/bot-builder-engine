@@ -46,6 +46,12 @@ type VerifyNumberInput struct {
 	Code   string `json:"code"`
 }
 
+type PlayGroundInput struct {
+	Key         string `json:"instanceKey"`
+	Recipient   string `json:"recipient"`
+	TextMessage string `json:"textMessage"`
+}
+
 func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
 	config.AllowAllOrigins(w, r)
 	method := r.Method
@@ -66,6 +72,11 @@ func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		if strings.HasPrefix(r.URL.Path, "/poc/whats/playground-send") {
+			playgroundSend(w, r)
+			return
+		}
+
 		generateCode(w, r)
 		return
 	}
@@ -83,6 +94,23 @@ func generateRandomString(length int) string {
 	}
 
 	return string(result)
+}
+
+func playgroundSend(w http.ResponseWriter, r *http.Request) {
+	var input PlayGroundInput
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	_, err := application.PlayGroundSend(input.Key, input.TextMessage, input.Recipient)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]bool{"success": true})
 }
 
 func verifyNumber(w http.ResponseWriter, r *http.Request) {

@@ -28,13 +28,43 @@
 			"response": []
 		},
 		{
+			"name": "PlayGround",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"instanceKey\": \"PAI_CELULAR\",\n  \"recipient\": \"554898457797\",\n  \"textMessage\": \"Hello, world!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/poc/whats/playground-send",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"poc",
+						"whats",
+						"playground-send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Verify Number",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\n    \"code\": \"audit_messages\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

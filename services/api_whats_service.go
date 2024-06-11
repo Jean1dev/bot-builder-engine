@@ -15,20 +15,8 @@ import (
 )
 
 var (
-	token = func() string {
-		value := os.Getenv("TOKEN")
-		if value == "" {
-			return "Bearer RANDOM_STRING_HERE"
-		}
-		return value
-	}()
-	baseURL = func() string {
-		value := os.Getenv("BASE_URL")
-		if value == "" {
-			return "http://localhost:3333/"
-		}
-		return value
-	}()
+	token   string
+	baseURL string
 )
 
 type TextMessageOutput struct {
@@ -107,6 +95,22 @@ type BtnDataInput struct {
 type InputTemplateButtonMessage struct {
 	Number string       `json:"id"`
 	Data   BtnDataInput `json:"btndata"`
+}
+
+func ConfigureEnv() {
+	value := os.Getenv("TOKEN")
+	if value == "" {
+		token = "Bearer RANDOM_STRING_HERE"
+	}
+
+	token = value
+
+	value = os.Getenv("BASE_URL")
+	if value == "" {
+		baseURL = "http://localhost:3333/"
+	}
+
+	baseURL = value
 }
 
 func VerifyNumberOnWhatsApi(key string) (*VerifyNumberOutput, error) {
