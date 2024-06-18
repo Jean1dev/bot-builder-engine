@@ -81,6 +81,13 @@ func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if method == "GET" {
+		if strings.HasPrefix(r.URL.Path, "/poc/whats/audit") {
+			listAudit(w, r)
+			return
+		}
+	}
+
 	http.Error(w, "Method not allowed", http.StatusBadRequest)
 }
 
@@ -94,6 +101,18 @@ func generateRandomString(length int) string {
 	}
 
 	return string(result)
+}
+
+func listAudit(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("key")
+	audit, err := application.ListAudit(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(audit)
 }
 
 func playgroundSend(w http.ResponseWriter, r *http.Request) {

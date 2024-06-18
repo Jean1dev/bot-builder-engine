@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
 	"time"
 )
 
@@ -38,4 +39,16 @@ func DownloadImageFromUrl(url string) (string, error) {
 
 	log.Printf("arquivo baixado em %s", filename)
 	return file.Name(), nil
+}
+
+func InvertSlice(slice interface{}) interface{} {
+	s := reflect.ValueOf(slice)
+	length := s.Len()
+	invertedSlice := reflect.MakeSlice(s.Type(), length, length)
+
+	for i := 0; i < length; i++ {
+		invertedSlice.Index(length - i - 1).Set(s.Index(i))
+	}
+
+	return invertedSlice.Interface()
 }

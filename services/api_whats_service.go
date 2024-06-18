@@ -9,6 +9,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -145,8 +146,21 @@ func VerifyNumberOnWhatsApi(key string) (*VerifyNumberOutput, error) {
 	return &verifyNumber, nil
 }
 
-func GetAuditMessages(id string) (*AuditMessagesOuput, error) {
-	apiURL := fmt.Sprintf("%saudit/find?id=%s", baseURL, id)
+func GetAuditMessages(id string, key string) (*AuditMessagesOuput, error) {
+	apiURL := fmt.Sprintf("%saudit/find", baseURL)
+	queryParams := url.Values{}
+
+	if id != "" {
+		queryParams.Set("id", id)
+	}
+
+	if key != "" {
+		queryParams.Set("key", key)
+	}
+
+	if len(queryParams) > 0 {
+		apiURL = fmt.Sprintf("%s?%s", apiURL, queryParams.Encode())
+	}
 
 	req, err := http.NewRequest("GET", apiURL, nil)
 

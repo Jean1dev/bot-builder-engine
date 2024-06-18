@@ -173,6 +173,33 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Audit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/poc/whats/audit?key=teste",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"poc",
+						"whats",
+						"audit"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "teste"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -3,6 +3,7 @@ package application
 import (
 	"bot_builder_engine/data"
 	"bot_builder_engine/services"
+	"bot_builder_engine/utils"
 	"errors"
 	"fmt"
 	"log"
@@ -73,4 +74,35 @@ func PlayGroundSend(key string, message string, recipient string) (bool, error) 
 	}
 
 	return true, nil
+}
+
+func ListAudit(key string) (interface{}, error) {
+	audits, err := services.GetAuditMessages("", key)
+	if err != nil {
+		return nil, err
+	}
+
+	if audits.Error {
+		return nil, errors.New("error getting audit messages")
+	}
+
+	remapData := make([]interface{}, len(audits.Data))
+
+	for i, v := range audits.Data {
+		data := struct {
+			Status    string `json:"status"`
+			Id        string `json:"id"`
+			RemoteJid string `json:"remoteJid"`
+		}{
+			Status:    v.Status,
+			Id:        v.ID,
+			RemoteJid: v.RemoteJid,
+		}
+
+		remapData[i] = data
+	}
+
+	output := utils.InvertSlice(remapData)
+
+	return output, nil
 }

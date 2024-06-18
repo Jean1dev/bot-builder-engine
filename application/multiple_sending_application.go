@@ -75,7 +75,7 @@ func checkStatus(id string, filename string, tentatives int16) {
 	}
 
 	time.Sleep(time.Second * 2)
-	result, err := services.GetAuditMessages(id)
+	result, err := services.GetAuditMessages(id, "")
 	if err != nil {
 		if tentatives > 0 {
 			time.Sleep(time.Second * 1)
