@@ -12,6 +12,12 @@ import (
 	"time"
 )
 
+type TypeBotInput struct {
+	Key     string `json:"key"`
+	ApiHost string `json:"apiHost"`
+	Name    string `json:"name"`
+}
+
 type GenerateCodeInput struct {
 	Code string `json:"code"`
 }
@@ -74,6 +80,11 @@ func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
 
 		if strings.HasPrefix(r.URL.Path, "/poc/whats/playground-send") {
 			playgroundSend(w, r)
+			return
+		}
+
+		if strings.HasPrefix(r.URL.Path, "/poc/whats/add-typebot") {
+			addTypeBot(w, r)
 			return
 		}
 
@@ -189,4 +200,18 @@ func generateCode(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Write([]byte(html))
+}
+
+func addTypeBot(w http.ResponseWriter, r *http.Request) {
+	var input TypeBotInput
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	success := application.AddTypeBotOnNumber(input.Key, input.ApiHost, input.Name)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]bool{"success": success})
 }

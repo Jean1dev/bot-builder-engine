@@ -12,8 +12,7 @@ import (
 )
 
 func GenerateQRCode(key string) (string, error) {
-	// TODO :: RANDOM_STRING_HERE ???
-	body, err := services.MakeApiCall(fmt.Sprintf("instance/init?webhook=true&key=%s&token=RANDOM_STRING_HERE", key), "GET")
+	body, err := services.MakeApiCall(fmt.Sprintf("instance/init?webhook=true&key=%s", key), "GET")
 	if err != nil {
 		return "", err
 	}
@@ -105,4 +104,14 @@ func ListAudit(key string) (interface{}, error) {
 	output := utils.InvertSlice(remapData)
 
 	return output, nil
+}
+
+func AddTypeBotOnNumber(key string, apiHost string, typebotName string) bool {
+	_, err := services.AddTypeBot(key, apiHost, typebotName)
+	if err != nil {
+		log.Printf("error adding typebot on number")
+		return false
+	}
+
+	return true
 }

@@ -73,6 +73,7 @@ func setupAPI() {
 	http.HandleFunc("/poc/whats/verify-number", routes.ApiWhatsRouterHandler)
 	http.HandleFunc("/poc/whats/playground-send", routes.ApiWhatsRouterHandler)
 	http.HandleFunc("/poc/whats/audit", routes.ApiWhatsRouterHandler)
+	http.HandleFunc("/poc/whats/add-typebot", routes.ApiWhatsRouterHandler)
 
 	http.HandleFunc("/poc/whats/batch-send", routes.BatchSend)
 	http.HandleFunc("/poc/whats/batch-retrieve", routes.BatchRetrive)
