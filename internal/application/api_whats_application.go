@@ -1,14 +1,15 @@
 package application
 
 import (
-	"bot_builder_engine/data"
-	"bot_builder_engine/services"
-	"bot_builder_engine/utils"
 	"errors"
 	"fmt"
 	"log"
 	"net/url"
 	"time"
+
+	"github.com/Jean1dev/bot-builder-engine/internal/services"
+	"github.com/Jean1dev/bot-builder-engine/pkg/data"
+	"github.com/Jean1dev/bot-builder-engine/utils"
 )
 
 func GenerateQRCode(key string) (string, error) {

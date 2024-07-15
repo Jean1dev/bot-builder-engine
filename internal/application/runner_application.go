@@ -1,15 +1,16 @@
 package application
 
 import (
-	"bot_builder_engine/data"
-	"bot_builder_engine/repository"
-	"bot_builder_engine/services"
-	"bot_builder_engine/utils"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"net/url"
+
+	"github.com/Jean1dev/bot-builder-engine/internal/services"
+	"github.com/Jean1dev/bot-builder-engine/pkg/data"
+	"github.com/Jean1dev/bot-builder-engine/pkg/repository"
+	"github.com/Jean1dev/bot-builder-engine/utils"
 )
 
 func verifyIfKeyRegistered(key string) bool {

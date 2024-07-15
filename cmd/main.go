@@ -1,14 +1,14 @@
 package main
 
 import (
-	"bot_builder_engine/routes"
-	"bot_builder_engine/services"
 	"bufio"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"strings"
+
+	"github.com/Jean1dev/bot-builder-engine/internal/infra"
+	"github.com/Jean1dev/bot-builder-engine/internal/services"
 )
 
 /*
@@ -52,29 +52,6 @@ func init() {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	setupAPI()
 	services.ConfigureEnv()
-	log.Printf("server running on %s", port)
-	if err := http.ListenAndServe(fmt.Sprintf(":%s", port), nil); err != nil {
-		panic(err)
-	}
-
-}
-
-func setupAPI() {
-	http.HandleFunc("/poc/whats/generate-code", routes.ApiWhatsRouterHandler)
-	http.HandleFunc("/poc/whats/engine-run", routes.ApiWhatsRouterHandler)
-	http.HandleFunc("/poc/whats/engine-hook", routes.ApiWhatsRouterHandler)
-	http.HandleFunc("/poc/whats/verify-number", routes.ApiWhatsRouterHandler)
-	http.HandleFunc("/poc/whats/playground-send", routes.ApiWhatsRouterHandler)
-	http.HandleFunc("/poc/whats/audit", routes.ApiWhatsRouterHandler)
-	http.HandleFunc("/poc/whats/add-typebot", routes.ApiWhatsRouterHandler)
-
-	http.HandleFunc("/poc/whats/batch-send", routes.BatchSend)
-	http.HandleFunc("/poc/whats/batch-retrieve", routes.BatchRetrive)
+	infra.ConfigAndRunHttpServer()
 }

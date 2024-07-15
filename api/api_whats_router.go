@@ -1,15 +1,16 @@
-package routes
+package api
 
 import (
-	"bot_builder_engine/application"
-	"bot_builder_engine/data"
-	"bot_builder_engine/infra/config"
 	"encoding/json"
 	"log"
 	"math/rand"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/Jean1dev/bot-builder-engine/configs"
+	"github.com/Jean1dev/bot-builder-engine/internal/application"
+	"github.com/Jean1dev/bot-builder-engine/pkg/data"
 )
 
 type TypeBotInput struct {
@@ -59,7 +60,7 @@ type PlayGroundInput struct {
 }
 
 func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
-	config.AllowAllOrigins(w, r)
+	configs.AllowAllOrigins(w, r)
 	method := r.Method
 
 	if method == "POST" {
