@@ -1,10 +1,11 @@
-package routes
+package api
 
 import (
-	"bot_builder_engine/application"
-	"bot_builder_engine/infra/config"
 	"encoding/json"
 	"net/http"
+
+	"github.com/Jean1dev/bot-builder-engine/configs"
+	"github.com/Jean1dev/bot-builder-engine/internal/application"
 )
 
 type MultipleSendingInputBody struct {
@@ -15,7 +16,7 @@ type MultipleSendingInputBody struct {
 }
 
 func BatchSend(w http.ResponseWriter, r *http.Request) {
-	config.AllowAllOrigins(w, r)
+	configs.AllowAllOrigins(w, r)
 	var inputBody MultipleSendingInputBody
 	if err := json.NewDecoder(r.Body).Decode(&inputBody); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -28,7 +29,7 @@ func BatchSend(w http.ResponseWriter, r *http.Request) {
 }
 
 func BatchRetrive(w http.ResponseWriter, r *http.Request) {
-	config.AllowAllOrigins(w, r)
+	configs.AllowAllOrigins(w, r)
 	id := r.URL.Query().Get("id")
 
 	content, err := application.Retrive(id)

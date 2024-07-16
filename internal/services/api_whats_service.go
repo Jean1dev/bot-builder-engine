@@ -20,6 +20,14 @@ var (
 	baseURL string
 )
 
+type AddTypeBotInputJson struct {
+	Key     string `json:"key"`
+	Typebot struct {
+		ApiHost string `json:"apiHost"`
+		Name    string `json:"name"`
+	} `json:"typebot"`
+}
+
 type TextMessageOutput struct {
 	Error bool `json:"error"`
 	Data  struct {
@@ -356,7 +364,7 @@ func MakeApiCall(endpoint string, method string) ([]byte, error) {
 	url := fmt.Sprintf("%s%s", baseURL, endpoint)
 	payload := strings.NewReader(``)
 
-	client := &http.Client{}
+	client := &http.Client{Timeout: time.Second * 5}
 	req, err := http.NewRequest(method, url, payload)
 
 	if err != nil {
@@ -365,11 +373,6 @@ func MakeApiCall(endpoint string, method string) ([]byte, error) {
 	}
 
 	req.Header.Add("Authorization", token)
-
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -381,6 +384,61 @@ func MakeApiCall(endpoint string, method string) ([]byte, error) {
 
 	log.Println("Status da resposta:", res.Status)
 	if res.StatusCode != 201 && res.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("Status code %s", res.Status))
+	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return body, nil
+}
+
+func AddTypeBot(key string, apiHost string, typebotName string) ([]byte, error) {
+	url := fmt.Sprintf("%s%s", baseURL, "instance/typebot")
+
+	input := AddTypeBotInputJson{
+		Key: key,
+		Typebot: struct {
+			ApiHost string `json:"apiHost"`
+			Name    string `json:"name"`
+		}{
+			ApiHost: apiHost,
+			Name:    typebotName,
+		},
+	}
+
+	jsonData, err := json.Marshal(input)
+	if err != nil {
+		log.Println("Error marshalling JSON:", err)
+		return nil, err
+	}
+
+	payload := bytes.NewBuffer(jsonData)
+
+	client := &http.Client{Timeout: time.Second * 5}
+	req, err := http.NewRequest("POST", url, payload)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", token)
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	log.Println("Status da resposta:", res.Status)
+	if res.StatusCode != 200 {
 		return nil, errors.New(fmt.Sprintf("Status code %s", res.Status))
 	}
 

@@ -1,16 +1,23 @@
-package routes
+package api
 
 import (
-	"bot_builder_engine/application"
-	"bot_builder_engine/data"
-	"bot_builder_engine/infra/config"
 	"encoding/json"
 	"log"
 	"math/rand"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/Jean1dev/bot-builder-engine/configs"
+	"github.com/Jean1dev/bot-builder-engine/internal/application"
+	"github.com/Jean1dev/bot-builder-engine/pkg/data"
 )
+
+type TypeBotInput struct {
+	Key     string `json:"key"`
+	ApiHost string `json:"apiHost"`
+	Name    string `json:"name"`
+}
 
 type GenerateCodeInput struct {
 	Code string `json:"code"`
@@ -53,7 +60,7 @@ type PlayGroundInput struct {
 }
 
 func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
-	config.AllowAllOrigins(w, r)
+	configs.AllowAllOrigins(w, r)
 	method := r.Method
 
 	if method == "POST" {
@@ -74,6 +81,11 @@ func ApiWhatsRouterHandler(w http.ResponseWriter, r *http.Request) {
 
 		if strings.HasPrefix(r.URL.Path, "/poc/whats/playground-send") {
 			playgroundSend(w, r)
+			return
+		}
+
+		if strings.HasPrefix(r.URL.Path, "/poc/whats/add-typebot") {
+			addTypeBot(w, r)
 			return
 		}
 
@@ -189,4 +201,18 @@ func generateCode(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Write([]byte(html))
+}
+
+func addTypeBot(w http.ResponseWriter, r *http.Request) {
+	var input TypeBotInput
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	success := application.AddTypeBotOnNumber(input.Key, input.ApiHost, input.Name)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]bool{"success": success})
 }

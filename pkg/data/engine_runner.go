@@ -1,9 +1,10 @@
 package data
 
 import (
-	"bot_builder_engine/repository"
 	"encoding/json"
 	"fmt"
+
+	"github.com/Jean1dev/bot-builder-engine/pkg/repository"
 )
 
 type Engine struct {

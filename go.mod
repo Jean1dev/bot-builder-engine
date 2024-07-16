@@ -1,3 +1,3 @@
-module bot_builder_engine
+module github.com/Jean1dev/bot-builder-engine
 
-go 1.22
+go 1.22.1
